@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  00000308  00000000  00000000  00002dec  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000004ef  00000000  00000000  000030f4  2**0
+ 10 .debug_str    00000546  00000000  00000000  000030f4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000589  00000000  00000000  000035e3  2**0
+ 11 .debug_loc    00000589  00000000  00000000  0000363a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000c0  00000000  00000000  00003b6c  2**0
+ 12 .debug_ranges 000000c0  00000000  00000000  00003bc3  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -969,12 +969,6 @@ void DIO_SetPinDirection(uint8 PinNum,uint8 PinDirection)
  576:	08 95       	ret
 
 00000578 <main>:
-#include "timer.h"
-
-#define Task_Num 4
-
-int main(void)
-{
  578:	cf 93       	push	r28
  57a:	df 93       	push	r29
  57c:	cd b7       	in	r28, 0x3d	; 61
@@ -985,21 +979,12 @@ int main(void)
  586:	de bf       	out	0x3e, r29	; 62
  588:	0f be       	out	0x3f, r0	; 63
  58a:	cd bf       	out	0x3d, r28	; 61
-	/*Set the Port initialization*/
-	Init_Tasks	();
  58c:	0e 94 da 05 	call	0xbb4	; 0xbb4 <Init_Tasks>
-	
-	
-	/*Initialize The scheduler*/
-	schedulerInit(Task_Num);
  590:	64 e0       	ldi	r22, 0x04	; 4
  592:	70 e0       	ldi	r23, 0x00	; 0
  594:	80 e0       	ldi	r24, 0x00	; 0
  596:	90 e0       	ldi	r25, 0x00	; 0
  598:	0e 94 af 03 	call	0x75e	; 0x75e <schedulerInit>
-	
-	/*initialize structures data*/
-	Tasks Task0 = {Led0_Task,2500,2500,1};
  59c:	2b e0       	ldi	r18, 0x0B	; 11
  59e:	e0 e6       	ldi	r30, 0x60	; 96
  5a0:	f0 e0       	ldi	r31, 0x00	; 0
@@ -1010,7 +995,6 @@ int main(void)
  5aa:	0d 92       	st	X+, r0
  5ac:	2a 95       	dec	r18
  5ae:	e1 f7       	brne	.-8      	; 0x5a8 <main+0x30>
-	Tasks Task1 = {Led1_Task,1500,1500,0};
  5b0:	8b e0       	ldi	r24, 0x0B	; 11
  5b2:	eb e6       	ldi	r30, 0x6B	; 107
  5b4:	f0 e0       	ldi	r31, 0x00	; 0
@@ -1020,7 +1004,6 @@ int main(void)
  5bc:	0d 92       	st	X+, r0
  5be:	8a 95       	dec	r24
  5c0:	e1 f7       	brne	.-8      	; 0x5ba <main+0x42>
-	Tasks Task2 = {Led2_Task,2000,2000,2};
  5c2:	8b e0       	ldi	r24, 0x0B	; 11
  5c4:	e6 e7       	ldi	r30, 0x76	; 118
  5c6:	f0 e0       	ldi	r31, 0x00	; 0
@@ -1030,7 +1013,6 @@ int main(void)
  5ce:	0d 92       	st	X+, r0
  5d0:	8a 95       	dec	r24
  5d2:	e1 f7       	brne	.-8      	; 0x5cc <main+0x54>
-	Tasks Task3 = {Led3_Task,1000,1000,3};
  5d4:	8b e0       	ldi	r24, 0x0B	; 11
  5d6:	e1 e8       	ldi	r30, 0x81	; 129
  5d8:	f0 e0       	ldi	r31, 0x00	; 0
@@ -1040,39 +1022,21 @@ int main(void)
  5e0:	0d 92       	st	X+, r0
  5e2:	8a 95       	dec	r24
  5e4:	e1 f7       	brne	.-8      	; 0x5de <main+0x66>
-	
-		
-	/*Check if there the task is added or not*/
-	if (scheduler_Add_Task(&Task0))
  5e6:	ce 01       	movw	r24, r28
  5e8:	01 96       	adiw	r24, 0x01	; 1
  5ea:	0e 94 10 03 	call	0x620	; 0x620 <scheduler_Add_Task>
-	}
-	else
-	{
-		/*No place to add Task*/
-	}
-	scheduler_Add_Task(&Task1);
  5ee:	ce 01       	movw	r24, r28
  5f0:	0c 96       	adiw	r24, 0x0c	; 12
  5f2:	0e 94 10 03 	call	0x620	; 0x620 <scheduler_Add_Task>
-	scheduler_Add_Task(&Task2);
  5f6:	ce 01       	movw	r24, r28
  5f8:	47 96       	adiw	r24, 0x17	; 23
  5fa:	0e 94 10 03 	call	0x620	; 0x620 <scheduler_Add_Task>
-	scheduler_Add_Task(&Task3);
  5fe:	ce 01       	movw	r24, r28
  600:	82 96       	adiw	r24, 0x22	; 34
  602:	0e 94 10 03 	call	0x620	; 0x620 <scheduler_Add_Task>
-
-	/*Start the OS scheduler*/
-	schedulerStart();
  606:	0e 94 2c 04 	call	0x858	; 0x858 <schedulerStart>
  60a:	80 e0       	ldi	r24, 0x00	; 0
  60c:	90 e0       	ldi	r25, 0x00	; 0
-	
-	
-}
  60e:	ac 96       	adiw	r28, 0x2c	; 44
  610:	0f b6       	in	r0, 0x3f	; 63
  612:	f8 94       	cli
@@ -1911,233 +1875,119 @@ static void scheduler_Remove_Task ()
  bb2:	08 95       	ret
 
 00000bb4 <Init_Tasks>:
-*			I/O: NOTHING
-*Return: Nothing
-*Description: Function to Set LED0
-**************************************************************/
-void Init_Tasks(void)
-{
  bb4:	cf 93       	push	r28
  bb6:	df 93       	push	r29
  bb8:	cd b7       	in	r28, 0x3d	; 61
  bba:	de b7       	in	r29, 0x3e	; 62
-		DIO_SetPinDirection(LED0,HIGH);
  bbc:	61 e0       	ldi	r22, 0x01	; 1
  bbe:	8c e0       	ldi	r24, 0x0C	; 12
  bc0:	0e 94 d0 01 	call	0x3a0	; 0x3a0 <DIO_SetPinDirection>
-		DIO_SetPinDirection(LED1,HIGH);
  bc4:	61 e0       	ldi	r22, 0x01	; 1
  bc6:	8d e0       	ldi	r24, 0x0D	; 13
  bc8:	0e 94 d0 01 	call	0x3a0	; 0x3a0 <DIO_SetPinDirection>
-		DIO_SetPinDirection(LED2,HIGH);
  bcc:	61 e0       	ldi	r22, 0x01	; 1
  bce:	8e e0       	ldi	r24, 0x0E	; 14
  bd0:	0e 94 d0 01 	call	0x3a0	; 0x3a0 <DIO_SetPinDirection>
-		DIO_SetPinDirection(LED3,HIGH);
  bd4:	61 e0       	ldi	r22, 0x01	; 1
  bd6:	8f e0       	ldi	r24, 0x0F	; 15
  bd8:	0e 94 d0 01 	call	0x3a0	; 0x3a0 <DIO_SetPinDirection>
-		DIO_SetPinDirection(BUTTON0,LOW);
  bdc:	60 e0       	ldi	r22, 0x00	; 0
  bde:	8a e0       	ldi	r24, 0x0A	; 10
  be0:	0e 94 d0 01 	call	0x3a0	; 0x3a0 <DIO_SetPinDirection>
-}
  be4:	00 00       	nop
  be6:	df 91       	pop	r29
  be8:	cf 91       	pop	r28
  bea:	08 95       	ret
 
 00000bec <Led0_Task>:
-*			I/O: NOTHING
-*Return: Nothing
-*Description: Function to Set LED0
-**************************************************************/
-void Led0_Task(void)
-{
  bec:	cf 93       	push	r28
  bee:	df 93       	push	r29
  bf0:	cd b7       	in	r28, 0x3d	; 61
  bf2:	de b7       	in	r29, 0x3e	; 62
-		if(DIO_ReadPin(LED0))
  bf4:	8c e0       	ldi	r24, 0x0C	; 12
  bf6:	0e 94 35 01 	call	0x26a	; 0x26a <DIO_ReadPin>
  bfa:	88 23       	and	r24, r24
  bfc:	29 f0       	breq	.+10     	; 0xc08 <Led0_Task+0x1c>
-		{
-			DIO_WritePin(LED0,LOW);
  bfe:	60 e0       	ldi	r22, 0x00	; 0
  c00:	8c e0       	ldi	r24, 0x0C	; 12
  c02:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-		}
-		else
-		{
-			DIO_WritePin(LED0,HIGH);
-		}
-}
  c06:	04 c0       	rjmp	.+8      	; 0xc10 <Led0_Task+0x24>
-		{
-			DIO_WritePin(LED0,LOW);
-		}
-		else
-		{
-			DIO_WritePin(LED0,HIGH);
  c08:	61 e0       	ldi	r22, 0x01	; 1
  c0a:	8c e0       	ldi	r24, 0x0C	; 12
  c0c:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-		}
-}
  c10:	00 00       	nop
  c12:	df 91       	pop	r29
  c14:	cf 91       	pop	r28
  c16:	08 95       	ret
 
 00000c18 <Led1_Task>:
-*			I/O: NOTHING
-*Return: Nothing
-*Description: Function to Set LED1
-**************************************************************/
-void Led1_Task()
-{
  c18:	cf 93       	push	r28
  c1a:	df 93       	push	r29
  c1c:	cd b7       	in	r28, 0x3d	; 61
  c1e:	de b7       	in	r29, 0x3e	; 62
-
-		if(DIO_ReadPin(LED1))
  c20:	8d e0       	ldi	r24, 0x0D	; 13
  c22:	0e 94 35 01 	call	0x26a	; 0x26a <DIO_ReadPin>
  c26:	88 23       	and	r24, r24
  c28:	29 f0       	breq	.+10     	; 0xc34 <Led1_Task+0x1c>
-		{
-			DIO_WritePin(LED1,LOW);
  c2a:	60 e0       	ldi	r22, 0x00	; 0
  c2c:	8d e0       	ldi	r24, 0x0D	; 13
  c2e:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-		else
-		{
-			DIO_WritePin(LED1,HIGH);
-		}
-
-}
  c32:	04 c0       	rjmp	.+8      	; 0xc3c <Led1_Task+0x24>
-		{
-			DIO_WritePin(LED1,LOW);
-		}
-		else
-		{
-			DIO_WritePin(LED1,HIGH);
  c34:	61 e0       	ldi	r22, 0x01	; 1
  c36:	8d e0       	ldi	r24, 0x0D	; 13
  c38:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-		}
-
-}
  c3c:	00 00       	nop
  c3e:	df 91       	pop	r29
  c40:	cf 91       	pop	r28
  c42:	08 95       	ret
 
 00000c44 <Led2_Task>:
-*			I/O: NOTHING
-*Return: Nothing
-*Description: Function to Set LED2
-**************************************************************/
-void Led2_Task()
-{
  c44:	cf 93       	push	r28
  c46:	df 93       	push	r29
  c48:	cd b7       	in	r28, 0x3d	; 61
  c4a:	de b7       	in	r29, 0x3e	; 62
-	if(DIO_ReadPin(LED2))
  c4c:	8e e0       	ldi	r24, 0x0E	; 14
  c4e:	0e 94 35 01 	call	0x26a	; 0x26a <DIO_ReadPin>
  c52:	88 23       	and	r24, r24
  c54:	29 f0       	breq	.+10     	; 0xc60 <Led2_Task+0x1c>
-	{
-		DIO_WritePin(LED2,LOW);
  c56:	60 e0       	ldi	r22, 0x00	; 0
  c58:	8e e0       	ldi	r24, 0x0E	; 14
  c5a:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-	}
-	else
-	{
-		DIO_WritePin(LED2,HIGH);
-	}
-}
  c5e:	04 c0       	rjmp	.+8      	; 0xc68 <Led2_Task+0x24>
-	{
-		DIO_WritePin(LED2,LOW);
-	}
-	else
-	{
-		DIO_WritePin(LED2,HIGH);
  c60:	61 e0       	ldi	r22, 0x01	; 1
  c62:	8e e0       	ldi	r24, 0x0E	; 14
  c64:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-	}
-}
  c68:	00 00       	nop
  c6a:	df 91       	pop	r29
  c6c:	cf 91       	pop	r28
  c6e:	08 95       	ret
 
 00000c70 <Led3_Task>:
-*			I/O: NOTHING
-*Return: Nothing
-*Description: Function to Set LED3
-**************************************************************/
-void Led3_Task()
-{
  c70:	cf 93       	push	r28
  c72:	df 93       	push	r29
  c74:	cd b7       	in	r28, 0x3d	; 61
  c76:	de b7       	in	r29, 0x3e	; 62
-	if(DIO_ReadPin(LED3))
  c78:	8f e0       	ldi	r24, 0x0F	; 15
  c7a:	0e 94 35 01 	call	0x26a	; 0x26a <DIO_ReadPin>
  c7e:	88 23       	and	r24, r24
  c80:	29 f0       	breq	.+10     	; 0xc8c <Led3_Task+0x1c>
-	{
-		DIO_WritePin(LED3,LOW);
  c82:	60 e0       	ldi	r22, 0x00	; 0
  c84:	8f e0       	ldi	r24, 0x0F	; 15
  c86:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-	}
-	else
-	{
-		DIO_WritePin(LED3,HIGH);
-	}
-}
  c8a:	04 c0       	rjmp	.+8      	; 0xc94 <Led3_Task+0x24>
-	{
-		DIO_WritePin(LED3,LOW);
-	}
-	else
-	{
-		DIO_WritePin(LED3,HIGH);
  c8c:	61 e0       	ldi	r22, 0x01	; 1
  c8e:	8f e0       	ldi	r24, 0x0F	; 15
  c90:	0e 94 49 00 	call	0x92	; 0x92 <DIO_WritePin>
-	}
-}
  c94:	00 00       	nop
  c96:	df 91       	pop	r29
  c98:	cf 91       	pop	r28
  c9a:	08 95       	ret
 
 00000c9c <timer_init>:
-*Return: Nothing
-*Description: This function Initialize timer-1 by 1 ms
-**************************************************************/
-
-void timer_init()
-{
  c9c:	cf 93       	push	r28
  c9e:	df 93       	push	r29
  ca0:	cd b7       	in	r28, 0x3d	; 61
  ca2:	de b7       	in	r29, 0x3e	; 62
-	/*Timer1 CTC MODE (MODE-4)*/
-	CLEAR_BIT(TCCR1A,WGM10);
  ca4:	8f e4       	ldi	r24, 0x4F	; 79
  ca6:	90 e0       	ldi	r25, 0x00	; 0
  ca8:	2f e4       	ldi	r18, 0x4F	; 79
@@ -2147,7 +1997,6 @@ void timer_init()
  cb0:	2e 7f       	andi	r18, 0xFE	; 254
  cb2:	fc 01       	movw	r30, r24
  cb4:	20 83       	st	Z, r18
-	CLEAR_BIT(TCCR1A,WGM11);
  cb6:	8f e4       	ldi	r24, 0x4F	; 79
  cb8:	90 e0       	ldi	r25, 0x00	; 0
  cba:	2f e4       	ldi	r18, 0x4F	; 79
@@ -2157,7 +2006,6 @@ void timer_init()
  cc2:	2d 7f       	andi	r18, 0xFD	; 253
  cc4:	fc 01       	movw	r30, r24
  cc6:	20 83       	st	Z, r18
-	SET_BIT(TCCR1B,WGM12);
  cc8:	8e e4       	ldi	r24, 0x4E	; 78
  cca:	90 e0       	ldi	r25, 0x00	; 0
  ccc:	2e e4       	ldi	r18, 0x4E	; 78
@@ -2167,7 +2015,6 @@ void timer_init()
  cd4:	28 60       	ori	r18, 0x08	; 8
  cd6:	fc 01       	movw	r30, r24
  cd8:	20 83       	st	Z, r18
-	CLEAR_BIT(TCCR1B,WGM13);
  cda:	8e e4       	ldi	r24, 0x4E	; 78
  cdc:	90 e0       	ldi	r25, 0x00	; 0
  cde:	2e e4       	ldi	r18, 0x4E	; 78
@@ -2177,23 +2024,16 @@ void timer_init()
  ce6:	2f 7e       	andi	r18, 0xEF	; 239
  ce8:	fc 01       	movw	r30, r24
  cea:	20 83       	st	Z, r18
-	
-	/*set OCR = 16000*/
-	OCR1AH = Compare_Value >> SHIFT_EIGHT;
  cec:	8b e4       	ldi	r24, 0x4B	; 75
  cee:	90 e0       	ldi	r25, 0x00	; 0
  cf0:	2e e3       	ldi	r18, 0x3E	; 62
  cf2:	fc 01       	movw	r30, r24
  cf4:	20 83       	st	Z, r18
-	OCR1AL = Compare_Value & LOW_MASK;
  cf6:	8a e4       	ldi	r24, 0x4A	; 74
  cf8:	90 e0       	ldi	r25, 0x00	; 0
  cfa:	20 e8       	ldi	r18, 0x80	; 128
  cfc:	fc 01       	movw	r30, r24
  cfe:	20 83       	st	Z, r18
-	
-	/*Set prescalar =1*/
-	SET_BIT(TCCR1B,CS10);
  d00:	8e e4       	ldi	r24, 0x4E	; 78
  d02:	90 e0       	ldi	r25, 0x00	; 0
  d04:	2e e4       	ldi	r18, 0x4E	; 78
@@ -2203,7 +2043,6 @@ void timer_init()
  d0c:	21 60       	ori	r18, 0x01	; 1
  d0e:	fc 01       	movw	r30, r24
  d10:	20 83       	st	Z, r18
-	CLEAR_BIT(TCCR1B,CS11);
  d12:	8e e4       	ldi	r24, 0x4E	; 78
  d14:	90 e0       	ldi	r25, 0x00	; 0
  d16:	2e e4       	ldi	r18, 0x4E	; 78
@@ -2213,7 +2052,6 @@ void timer_init()
  d1e:	2d 7f       	andi	r18, 0xFD	; 253
  d20:	fc 01       	movw	r30, r24
  d22:	20 83       	st	Z, r18
-	CLEAR_BIT(TCCR1B,CS12);
  d24:	8e e4       	ldi	r24, 0x4E	; 78
  d26:	90 e0       	ldi	r25, 0x00	; 0
  d28:	2e e4       	ldi	r18, 0x4E	; 78
@@ -2223,9 +2061,6 @@ void timer_init()
  d30:	2b 7f       	andi	r18, 0xFB	; 251
  d32:	fc 01       	movw	r30, r24
  d34:	20 83       	st	Z, r18
-	
-	/*enable global interrupt */
-	SET_BIT(SREG_INTERRUPT,I);
  d36:	8f e5       	ldi	r24, 0x5F	; 95
  d38:	90 e0       	ldi	r25, 0x00	; 0
  d3a:	2f e5       	ldi	r18, 0x5F	; 95
@@ -2235,9 +2070,6 @@ void timer_init()
  d42:	20 68       	ori	r18, 0x80	; 128
  d44:	fc 01       	movw	r30, r24
  d46:	20 83       	st	Z, r18
-	
-	/*set timer CTC flag */
-	SET_BIT(TIMER_TIMSK,OCIE1A);
  d48:	89 e5       	ldi	r24, 0x59	; 89
  d4a:	90 e0       	ldi	r25, 0x00	; 0
  d4c:	29 e5       	ldi	r18, 0x59	; 89
@@ -2247,19 +2079,12 @@ void timer_init()
  d54:	20 61       	ori	r18, 0x10	; 16
  d56:	fc 01       	movw	r30, r24
  d58:	20 83       	st	Z, r18
-}
  d5a:	00 00       	nop
  d5c:	df 91       	pop	r29
  d5e:	cf 91       	pop	r28
  d60:	08 95       	ret
 
 00000d62 <set_call_back>:
-*Return: Nothing
-*Description: This function sets call back pointer to function
-			  to equal the input pointer to function
-**************************************************************/
-void set_call_back(void(*ptr)(void))
-{
  d62:	cf 93       	push	r28
  d64:	df 93       	push	r29
  d66:	00 d0       	rcall	.+0      	; 0xd68 <set_call_back+0x6>
@@ -2267,12 +2092,10 @@ void set_call_back(void(*ptr)(void))
  d6a:	de b7       	in	r29, 0x3e	; 62
  d6c:	9a 83       	std	Y+2, r25	; 0x02
  d6e:	89 83       	std	Y+1, r24	; 0x01
-	call_back=ptr;
  d70:	89 81       	ldd	r24, Y+1	; 0x01
  d72:	9a 81       	ldd	r25, Y+2	; 0x02
  d74:	90 93 cd 00 	sts	0x00CD, r25	; 0x8000cd <call_back+0x1>
  d78:	80 93 cc 00 	sts	0x00CC, r24	; 0x8000cc <call_back>
-}
  d7c:	00 00       	nop
  d7e:	0f 90       	pop	r0
  d80:	0f 90       	pop	r0
@@ -2281,10 +2104,6 @@ void set_call_back(void(*ptr)(void))
  d86:	08 95       	ret
 
 00000d88 <__vector_7>:
-
-/* The ISR of CTC INT of Timer-1 */
-ISR(TIMER1_COMPA_vect)
-{
  d88:	1f 92       	push	r1
  d8a:	0f 92       	push	r0
  d8c:	00 90 5f 00 	lds	r0, 0x005F	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
@@ -2306,7 +2125,6 @@ ISR(TIMER1_COMPA_vect)
  dae:	df 93       	push	r29
  db0:	cd b7       	in	r28, 0x3d	; 61
  db2:	de b7       	in	r29, 0x3e	; 62
-		call_back();
  db4:	80 91 cc 00 	lds	r24, 0x00CC	; 0x8000cc <call_back>
  db8:	90 91 cd 00 	lds	r25, 0x00CD	; 0x8000cd <call_back+0x1>
  dbc:	fc 01       	movw	r30, r24
