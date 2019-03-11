@@ -1,0 +1,147 @@
+
+UART_Driver.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000aa  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000000fe  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000000fe  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000130  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000058  00000000  00000000  0000016c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   0000076a  00000000  00000000  000001c4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000060f  00000000  00000000  0000092e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000274  00000000  00000000  00000f3d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000084  00000000  00000000  000011b4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000003eb  00000000  00000000  00001238  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000000bc  00000000  00000000  00001623  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000038  00000000  00000000  000016df  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 53 00 	jmp	0xa6	; 0xa6 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+#include "config_UART.h"
+
+int main(void)
+{
+	/*Initialize UART*/
+	UART_Init();
+  6c:	0e 94 3d 00 	call	0x7a	; 0x7a <UART_Init>
+	uint8 character=ZERO;
+	while (1)
+	{
+		/*wait until receive and Store the value  in UDR*/
+			character = UART_Recieve();
+  70:	0e 94 4e 00 	call	0x9c	; 0x9c <UART_Recieve>
+			/*Transmit the Received data again*/
+			UART_Transmit(character);
+  74:	0e 94 44 00 	call	0x88	; 0x88 <UART_Transmit>
+  78:	fb cf       	rjmp	.-10     	; 0x70 <main+0x4>
+
+0000007a <UART_Init>:
+	{
+		case ONE:
+				/*Set Normal Speed Mode*/
+				UBRR = ((F_CPU/16)/(UART_Struct.BaudRate)) - ONE;
+				/*Set Baud Rate*/
+				UBRRH = UBRR>>EIGHT ;
+  7a:	10 bc       	out	0x20, r1	; 32
+				UBRRL = UBRR;
+  7c:	87 e6       	ldi	r24, 0x67	; 103
+  7e:	89 b9       	out	0x09, r24	; 9
+				/*Enable UART Transmitter and Receiver*/
+				UCSRB |= (TRUE<<RXEN)|(TRUE<<TXEN);
+  80:	8a b1       	in	r24, 0x0a	; 10
+  82:	88 61       	ori	r24, 0x18	; 24
+  84:	8a b9       	out	0x0a, r24	; 10
+  86:	08 95       	ret
+
+00000088 <UART_Transmit>:
+*Description: Function to Transmit character
+**************************************************************/
+
+void UART_Transmit(uint8 data)
+{
+	while(!GET_BIT(UCSRA,UDRE));
+  88:	9b b1       	in	r25, 0x0b	; 11
+  8a:	95 fb       	bst	r25, 5
+  8c:	22 27       	eor	r18, r18
+  8e:	20 f9       	bld	r18, 0
+  90:	30 e0       	ldi	r19, 0x00	; 0
+  92:	21 15       	cp	r18, r1
+  94:	31 05       	cpc	r19, r1
+  96:	e9 f3       	breq	.-6      	; 0x92 <UART_Transmit+0xa>
+	UDR=data;
+  98:	8c b9       	out	0x0c, r24	; 12
+  9a:	08 95       	ret
+
+0000009c <UART_Recieve>:
+*Description: Function to Receive character
+**************************************************************/
+
+uint8 UART_Recieve(void)
+{
+	while ( !(UCSRA & (ONE<<RXC)) );
+  9c:	8b b1       	in	r24, 0x0b	; 11
+  9e:	88 23       	and	r24, r24
+  a0:	f4 f7       	brge	.-4      	; 0x9e <UART_Recieve+0x2>
+	/* Get and return received data from buffer */
+	return UDR;
+
+	
+}
+  a2:	8c b1       	in	r24, 0x0c	; 12
+  a4:	08 95       	ret
+
+000000a6 <_exit>:
+  a6:	f8 94       	cli
+
+000000a8 <__stop_program>:
+  a8:	ff cf       	rjmp	.-2      	; 0xa8 <__stop_program>
