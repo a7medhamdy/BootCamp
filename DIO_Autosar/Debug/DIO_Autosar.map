@@ -1,0 +1,156 @@
+******************************************************************************
+                  TI ARM Linker PC v18.1.1                     
+******************************************************************************
+>> Linked Tue Mar 26 00:26:16 2019
+
+OUTPUT FILE NAME:   <DIO_Autosar.out>
+ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 00000a15
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  FLASH                 00000000   00040000  00000a66  0003f59a  R  X
+  SRAM                  20000000   00008000  00000200  00007e00  RW X
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+00000000    00000000    00000a66   00000a66    r-x
+  00000000    00000000    0000026c   0000026c    r-- .intvecs
+  0000026c    0000026c    000007ec   000007ec    r-x .text
+  00000a58    00000a58    0000000e   0000000e    r-- .const
+20000000    20000000    00000200   00000000    rw-
+  20000000    20000000    00000200   00000000    rw- .stack
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.intvecs   0    00000000    0000026c     
+                  00000000    0000026c     tm4c123gh6pm_startup_ccs.obj (.intvecs)
+
+.text      0    0000026c    000007ec     
+                  0000026c    0000073c     Dio.obj (.text)
+                  000009a8    0000006c     main.obj (.text)
+                  00000a14    00000030     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noinit_noargs:_c_int00_noinit_noargs)
+                  00000a44    0000000c     tm4c123gh6pm_startup_ccs.obj (.text)
+                  00000a50    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  00000a54    00000004                                   : exit.c.obj (.text:abort:abort)
+
+.const     0    00000a58    0000000e     
+                  00000a58    00000008     Dio_Lcfg.obj (.const:Dio_Channels)
+                  00000a60    00000006     Dio_Lcfg.obj (.const:Channel_Group)
+
+.cinit     0    00000000    00000000     UNINITIALIZED
+
+.init_array 
+*          0    00000000    00000000     UNINITIALIZED
+
+.stack     0    20000000    00000200     UNINITIALIZED
+                  20000000    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.stack)
+                  20000004    000001fc     --HOLE--
+
+MODULE SUMMARY
+
+       Module                         code   ro data   rw data
+       ------                         ----   -------   -------
+    .\
+       tm4c123gh6pm_startup_ccs.obj   12     620       0      
+       main.obj                       108    0         0      
+    +--+------------------------------+------+---------+---------+
+       Total:                         120    620       0      
+                                                              
+    .\DIO\
+       Dio.obj                        1852   0         0      
+       Dio_Lcfg.obj                   0      14        0      
+    +--+------------------------------+------+---------+---------+
+       Total:                         1852   14        0      
+                                                              
+    C:\ti\ccsv8\tools\compiler\ti-cgt-arm_18.1.1.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
+       boot_cortex_m.c.obj            48     0         0      
+       exit.c.obj                     4      0         0      
+       pre_init.c.obj                 4      0         0      
+    +--+------------------------------+------+---------+---------+
+       Total:                         56     0         0      
+                                                              
+       Stack:                         0      0         512    
+    +--+------------------------------+------+---------+---------+
+       Grand Total:                   2028   634       512    
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address   name                  
+-------   ----                  
+00000a55  C$$EXIT               
+00000a60  Channel_Group         
+00000a58  Dio_Channels          
+00000983  Dio_FlipChannel       
+0000095b  Dio_GetVersionInfo    
+0000026d  Dio_ReadChannel       
+0000073b  Dio_ReadChannelGroup  
+000005bd  Dio_ReadPort          
+00000385  Dio_WriteChannel      
+00000811  Dio_WriteChannelGroup 
+00000689  Dio_WritePort         
+00000a45  ResetISR              
+20000200  __STACK_END           
+00000200  __STACK_SIZE          
+20000200  __STACK_TOP           
+ffffffff  __TI_pprof_out_hndl   
+ffffffff  __TI_prof_data_size   
+ffffffff  __TI_prof_data_start  
+00000000  __TI_static_base__    
+ffffffff  __binit__             
+ffffffff  __c_args__            
+UNDEFED   __mpu_init            
+20000000  __stack               
+00000a15  _c_int00_noinit_noargs
+00000a51  _system_pre_init      
+00000a55  abort                 
+ffffffff  binit                 
+00000000  g_pfnVectors          
+000009a9  main                  
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address   name                  
+-------   ----                  
+00000000  __TI_static_base__    
+00000000  g_pfnVectors          
+00000200  __STACK_SIZE          
+0000026d  Dio_ReadChannel       
+00000385  Dio_WriteChannel      
+000005bd  Dio_ReadPort          
+00000689  Dio_WritePort         
+0000073b  Dio_ReadChannelGroup  
+00000811  Dio_WriteChannelGroup 
+0000095b  Dio_GetVersionInfo    
+00000983  Dio_FlipChannel       
+000009a9  main                  
+00000a15  _c_int00_noinit_noargs
+00000a45  ResetISR              
+00000a51  _system_pre_init      
+00000a55  C$$EXIT               
+00000a55  abort                 
+00000a58  Dio_Channels          
+00000a60  Channel_Group         
+20000000  __stack               
+20000200  __STACK_END           
+20000200  __STACK_TOP           
+ffffffff  __TI_pprof_out_hndl   
+ffffffff  __TI_prof_data_size   
+ffffffff  __TI_prof_data_start  
+ffffffff  __binit__             
+ffffffff  __c_args__            
+ffffffff  binit                 
+UNDEFED   __mpu_init            
+
+[29 symbols]
